@@ -1,0 +1,77 @@
+﻿@model IEnumerable<TaskManager.Models.TaskModel>;
+
+<div class="control-box" style="display: inline;">
+    <span style="padding: 0px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/650/650154.png" alt="" class="search-icon">
+        <input id="search-bar" name="Data" type="text" class="search-bar" placeholder="Search for task">
+    </span>
+    <span style="float:right; padding: 0px;">
+        <label for="sort" style="margin: 5px;">Sort by:</label>
+        <select id="sort-selection" name="select" class="select-box">
+            <option value="none" selected>---</option>
+            <option value="name">Name</option>
+            <option value="deadline">Deadline</option>
+            <option value="priority">Priority</option>
+        </select>
+        <script>
+            var sortSelector = document.getElementById("sort-selection");
+
+            sortSelector.addEventListener("change", function () {
+                if (this.value == "name") {
+                    window.location.replace('@Url.Action("SortByNameOutdated", "Task")').onload();
+                }
+                else if (this.value == "deadline") {
+                    window.location.replace('@Url.Action("SortByDeadlineOutdated", "Task")').onload();
+                }
+                else if (this.value == "priority") {
+                    window.location.replace('@Url.Action("SortByPriorityOutdated", "Task")').onload();
+                }
+                else if (this.value == "none") {
+                    window.location.replace('@Url.Action("", "Task")').onload();
+                }
+                //sortSelector.value = 'name';
+            });
+        </script>
+    </span>
+</div>
+
+<div class="table">
+    <div class="grid-start">
+        <div class="row" style="background-color: lightslategray;">Name</div>
+        <div class="row" style="background-color: lightslategray;">Deadline</div>
+        <div class="row" style="background-color: lightslategray;">Priority</div>
+        <div class="row" style="background-color: lightslategray;">Tags</div>
+        <div class="row" style="background-color: lightslategray;">Description</div>
+        <div class="row" style="background-color: lightslategray;">Manage</div>
+    </div>
+    @if (Model == null || Model.Where(task => task.Deadline < DateTime.Today).Count() == 0)
+    {
+        <p style="margin: 20px;">There are no outdated tasks in system!</p>
+    }
+    else
+    { 
+        @foreach (var task in Model)
+        {
+        <div class="grid">
+            @if (task.Deadline < DateTime.Today)
+            {
+                @if (task.IsDone)
+                {
+                    <div class="row">✔️@task.Name</div>
+                }
+                else 
+                {
+                    <div class="row">❌@task.Name</div>
+                } 
+                <div class="row">@task.Deadline.ToString("MMMM dd, yyyy")</div>
+                <div class="row">@task.Priority*</div>
+                <div class="row">@task.Tags</div>
+                <div class="row">@task.Description</div>
+                <div class="row">
+                    <a asp-controller="Task" asp-action="DeleteOutDated" class="btn btn-primary done-button" asp-route-id="@task.Id" style="background-color: #e09696;">Delete</a>
+                </div>
+            }
+        </div>
+    }    
+}
+</div>
