@@ -9,7 +9,7 @@ string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=T
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<TaskManagerDbContext>(opt => opt.UseSqlServer(connectionString));
-
+//haha
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
